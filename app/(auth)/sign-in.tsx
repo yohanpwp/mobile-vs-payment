@@ -2,7 +2,6 @@ import {
   ScrollView,
   Image,
   Text,
-  TextInput,
   View,
   TextInputBase,
   Switch,

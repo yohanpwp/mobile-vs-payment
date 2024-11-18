@@ -5,18 +5,18 @@ import { View, Text } from "react-native";
 interface tabBarIconProps {
   icon: ComponentPropsWithRef<typeof Ionicons>["name"];
   color: string;
-  name: string;
+  name?: string;
   focused: boolean;
 }
 export function TabBarIcon2({ icon, color, name, focused }: tabBarIconProps) {
   return (
-    <View className="flex items-center justify-center gap-1 py-2">
+    <View className="flex items-center justify-center w-full h-full">
         {/* Use icon from your images instead change icon type to string */}
         {/* <Image source={icon)} resizeMode="contain" tintColor={color} className= "w-6 h-6" /> */}
         {/* Use icon from ionicIconComponent */}
       <Ionicons
         name={icon}
-        size={focused? 32 : 28}
+        size={focused? 26 : 24}
         color={color}
         className="align-middle justify-center"
       />

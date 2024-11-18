@@ -1,5 +1,6 @@
 import { Tabs, Redirect } from 'expo-router';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { TabBarIcon2 } from '@/components/navigation/TabBarIcon2';
@@ -13,7 +14,6 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
         headerShown: false,
       }}>
@@ -22,7 +22,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon2 icon={focused ? 'home' : 'home-outline'} color={color} name= 'Home' focused={focused} />
+            <TabBarIcon2 icon={focused ? 'home' : 'home-outline'} color={color} focused={focused} />
           ),
         }}
       />
@@ -31,7 +31,7 @@ export default function TabLayout() {
         options={{
           title: 'Scan QR',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon2 icon={focused ? 'qr-code' : 'qr-code-outline'} color={color} name= 'Scan QR' focused={focused} />
+            <TabBarIcon2 icon={focused ? 'qr-code' : 'qr-code-outline'} color={color} focused={focused} />
           ),
         }}
       />
@@ -40,7 +40,7 @@ export default function TabLayout() {
         options={{
           title: 'History',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon2 icon={focused ? 'time' : 'time-outline'} color={color} name= 'History' focused={focused} />
+            <TabBarIcon2 icon={focused ? 'time' : 'time-outline'} color={color} focused={focused} />
           ),
         }}
       />
@@ -49,8 +49,8 @@ export default function TabLayout() {
         options={{
           title: 'Menu',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon2 icon={focused ? 'menu' : 'menu-outline'} color={color} name= 'Menu' focused={focused} />
-          ),
+            <TabBarIcon2 icon={focused ? 'menu' : 'menu-outline'} color={color} focused={focused} />
+          )
         }}
       />
     </Tabs>

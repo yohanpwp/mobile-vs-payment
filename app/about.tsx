@@ -6,7 +6,7 @@ const AboutPage = () => {
   return (
     <View style={styles.container}>
       <View>
-        <Text className='text-3xl'>AboutPage</Text>
+        <Text className='text-3xl'>About Page</Text>
       </View>
       <View className='flex-auto'>
         <CustomButton onPress={() => console.log('Yes')} title='Print' containerStyles='bg-yellow-500 px-24'></CustomButton>
