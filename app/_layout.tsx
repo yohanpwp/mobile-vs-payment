@@ -43,6 +43,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="(auth)" options={{ headerTitle: 'เริ่มต้นการใช้งาน'}}  />
           <Stack.Screen name="about" />
+          {/* <Stack.Screen name="/search/[query]" options={{ headerShown: false }} /> */}
           <Stack.Screen name="+not-found" />
         </Stack>
       </ThemeProvider>

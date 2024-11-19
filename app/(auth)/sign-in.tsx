@@ -5,6 +5,7 @@ import {
   View,
   TextInputBase,
   Switch,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,12 +14,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "@/constants/Images";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { AuthUserProps } from "@/constants/propUser";
+import { signIn } from "@/lib/appwrite";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignIn = () => {
   // Define the state
   const [user, setUser] = useState<AuthUserProps>({
+    email: '',
     username: "",
     password: "",
     rememberMe: false,
@@ -26,9 +30,15 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (value: AuthUserProps) => {
-    console.log(value);
-    setIsSubmitting(true);
-    // Add your authentication logic here
+    try {
+      const result = await signIn(value.email, value.password);
+      setIsSubmitting(true);
+      router.replace('/(tabs)')
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,10 +60,10 @@ const SignIn = () => {
         </View>
         <View className="mx-4 md:mx-12 p-4 md:p-12 bg-white rounded-2xl shadow-lg">
           <FormField
-            title="Username"
-            placeholder="Username"
-            value={user.username}
-            handleChangeText={(e) => setUser({ ...user, username: e })}
+            title="E-mail"
+            placeholder="E-mail"
+            value={user.email}
+            handleChangeText={(e) => setUser({ ...user, email: e })}
             otherStyles="mt-3"
           />
           <FormField
