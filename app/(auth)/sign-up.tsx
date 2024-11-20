@@ -47,8 +47,8 @@ const SignUp = () => {
 
   return (
     // Add your custom styles here or import them from a separate file
-    <SafeAreaView className="bg-gray-400 flex-1">
-      <ScrollView>
+    <SafeAreaView className="flex-grow">
+      <ScrollView className="bg-gray-400">
         <View className="w-full justify-center">
           <Image source={images.VerismartLogo} className="w-[160px] h-[60px]" />
           <View className="w-screen flex-row justify-between items-center px-2 my-5">
@@ -62,13 +62,6 @@ const SignUp = () => {
             </Link>
           </View>
           <View className="mx-4 md:mx-12 p-4 md:p-12 bg-white rounded-2xl shadow-lg">
-            <CustomButton
-              title="Create Account"
-              onPress={handleSubmit}
-              containerStyles="mt-6 bg-blue-500 py-3 font-psemibold text-white"
-              disabled={isSubmitting}
-              icon="add-circle-sharp"
-            />
             <FormField
               title="First Name"
               placeholder="First Name"
@@ -121,6 +114,13 @@ const SignUp = () => {
                 setUserData({ ...userData, confirmPassword: e })
               }
               otherStyles="mt-7"
+            />
+            <CustomButton
+              title="Create Account"
+              onPress={handleSubmit}
+              containerStyles="mt-6 bg-blue-500 py-3 font-psemibold text-white"
+              disabled={isSubmitting}
+              icon="add-circle-sharp"
             />
           </View>
         </View>

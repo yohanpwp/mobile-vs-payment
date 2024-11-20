@@ -16,7 +16,7 @@ import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
 import { AuthUserProps } from "@/constants/propUser";
-import { signIn } from "@/lib/appwrite";
+import { signIn, signOut } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignIn = () => {
@@ -40,11 +40,15 @@ const SignIn = () => {
       setIsSubmitting(false);
     }
   };
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/(auth)/sign-in");
+  }
 
   return (
     // Add your custom styles here or import them from a separate file
-    <SafeAreaView className="bg-gray-400 h-full">
-      <ScrollView>
+    <SafeAreaView className="flex-1">
+      <ScrollView className="bg-gray-400">
         <View className="w-full justify-center min-w-[85vh]">
           <Image source={images.VerismartLogo} className="w-[160px] h-[60px]" />
           <View className="w-screen flex-row justify-between items-center px-4 my-5">

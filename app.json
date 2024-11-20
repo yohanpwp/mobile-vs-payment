@@ -13,8 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "package": "com.veri.payment"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
