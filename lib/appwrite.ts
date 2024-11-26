@@ -1,4 +1,4 @@
-import { AuthUserProps } from "@/constants/propUser";
+import { UserDataProps } from "@/constants/propUser";
 import {
   Client,
   Account,
@@ -30,7 +30,7 @@ const avatar = new Avatars(client);
 const databases = new Databases(client);
 
 // Sign-up users
-export const createUser = async (value: AuthUserProps) => {
+export const createUser = async (value: UserDataProps) => {
   const { email, password, username, firstName, lastName } = value;
   try {
     const newAccount = await account.create(
@@ -78,6 +78,7 @@ export async function signIn(email: string, password: string) {
 export async function getAccount() {
   try {
     const currentAccount = await account.get();
+    console.log(currentAccount);
 
     return currentAccount;
   } catch (error: any) {

@@ -30,6 +30,10 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (value: AuthUserProps) => {
+    if (!user.email ||!user.password) {
+      Alert.alert("Please fill in all required fields");
+      return;
+    }
     try {
       const result = await signIn(value.email, value.password);
       setIsSubmitting(true);
