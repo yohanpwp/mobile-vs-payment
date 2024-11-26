@@ -16,10 +16,12 @@ import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
 import { AuthUserProps } from "@/constants/propUser";
-import { signIn, signOut } from "@/lib/appwrite";
+import { signIn } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
-const SignIn = () => {
+const SignIn = () => { 
+  // Use the global context
+  const { setIsLoggedIn } = useGlobalContext();
   // Define the state
   const [user, setUser] = useState<AuthUserProps>({
     email: '',
@@ -37,6 +39,7 @@ const SignIn = () => {
     try {
       const result = await signIn(value.email, value.password);
       setIsSubmitting(true);
+      setIsLoggedIn(true); // Update the global state
       router.replace('/(tabs)')
     } catch (error: any) {
       Alert.alert('Error', error.message);
@@ -44,10 +47,6 @@ const SignIn = () => {
       setIsSubmitting(false);
     }
   };
-  const handleLogout = async () => {
-    await signOut();
-    router.push("/(auth)/sign-in");
-  }
 
   return (
     // Add your custom styles here or import them from a separate file

@@ -12,12 +12,14 @@ import Loader from "@/components/Loader";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { isLoading, isLoggedIn  } = useGlobalContext();
+  const { isLoading, isLoggedIn, setUser, setIsLoggedIn  } = useGlobalContext();
 
-  if (!isLoading && !isLoggedIn) { return <Redirect href={'/(auth)/sign-in'} />; }
+  if (!isLoggedIn) { return <Redirect href={'/(auth)/sign-in'} />; }
 
   const handleLogout = async () => {
     await signOut();
+    setUser(null);
+    setIsLoggedIn(false);
     router.push("/(auth)/sign-in");
   }
   return (
@@ -26,8 +28,8 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={{height: '100%'}}>
         <View className="w-full justify-center items-center h-full px-4">
           <HelloWave />
-            <Text className="text-white text-3xl font-bold">Welcome Back!</Text>
-            <Text className="text-white text-lg">
+            <Text className="text-black text-3xl font-bold">Welcome Back!</Text>
+            <Text className="text-black text-lg">
               This is a simple mobile payment app using React Native and Expo.
             </Text>
             <CustomButton
