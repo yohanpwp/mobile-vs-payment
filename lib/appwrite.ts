@@ -78,8 +78,6 @@ export async function signIn(email: string, password: string) {
 export async function getAccount() {
   try {
     const currentAccount = await account.get();
-    console.log(currentAccount);
-
     return currentAccount;
   } catch (error: any) {
     throw new Error(error);
