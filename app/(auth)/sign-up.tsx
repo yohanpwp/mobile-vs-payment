@@ -16,11 +16,12 @@ import { UserDataProps } from "@/constants/propUser";
 import { images } from "@/constants/Images";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
-import { createUser } from "@/lib/appwrite";
+import { createUser, postLogin } from "@/lib/userdatabase"
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignUp = () => {
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const [userData, setUserData] = useState<UserDataProps>({
-    email: "",
     username: "",
     password: "",
     firstName: "",
@@ -29,15 +30,22 @@ const SignUp = () => {
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const handleSubmit = async () => {
-    if (!userData.email || !userData.username || !userData.password) {
+    if (!userData.username || !userData.password) {
       Alert.alert("Please fill in all required fields");
       return;
     }
     setIsSubmitting(true);
     try {
       const result = await createUser(userData);
+      if (result) {
+        Alert.alert("User created successfully!");
+        const result = await postLogin(userData);
+        setUser(result);
+        setIsSubmitting(true);
+        setIsLoggedIn(true); // Update the global state
+      }
       // set it to global state
-      router.replace("/");
+      
     } catch (error: any) {
       Alert.alert("Error", error.message);
     } finally {
@@ -71,8 +79,8 @@ const SignUp = () => {
               }
             />
             <FormField
-              title="Last Name"
-              placeholder="Last Name"
+              title="Lastname"
+              placeholder="Lastname"
               value={userData.lastName}
               handleChangeText={(e) =>
                 setUserData({ ...userData, lastName: e })
@@ -83,16 +91,7 @@ const SignUp = () => {
               title="Username"
               placeholder="Username"
               value={userData.username}
-              handleChangeText={(e) =>
-                setUserData({ ...userData, username: e })
-              }
-              otherStyles="mt-7"
-            />
-            <FormField
-              title="E-Mail"
-              placeholder="E-Mail"
-              value={userData.email}
-              handleChangeText={(e) => setUserData({ ...userData, email: e })}
+              handleChangeText={(e) => setUserData({ ...userData, username: e })}
               otherStyles="mt-7"
             />
             <FormField

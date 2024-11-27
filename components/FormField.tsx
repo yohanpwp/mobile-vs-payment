@@ -16,6 +16,7 @@ interface FormFieldProps {
   handleChangeText: (value: string) => void;
   otherStyles?: string;
   keyboardType?: KeyboardTypeOptions;
+  required? : boolean;
 }
 const FormField = ({
   title,
@@ -25,6 +26,7 @@ const FormField = ({
   handleChangeText,
   keyboardType = "default",
   otherStyles,
+  required = false,
   ...props
 }: FormFieldProps) => {
   // Add state to show/hide password

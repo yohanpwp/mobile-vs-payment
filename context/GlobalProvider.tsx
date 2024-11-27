@@ -7,15 +7,14 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import { Models } from "react-native-appwrite";
-import { getCurrentUser } from "@/lib/appwrite";
+import { getCurrentUser } from "@/lib/userdatabase"
 
 interface GlobalContextValue {
   isLoggedIn: boolean;
-  user: Models.Document | null;
+  user: Object | null;
   isLoading: boolean;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-  setUser: Dispatch<SetStateAction<Models.Document  | null>>;
+  setUser: Dispatch<SetStateAction<Object  | null>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -32,7 +31,7 @@ export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [user, setUser] = useState<Models.Document | null>(null);
+  const [user, setUser] = useState<Object | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {

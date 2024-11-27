@@ -16,15 +16,14 @@ import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
 import { AuthUserProps } from "@/constants/propUser";
-import { signIn } from "@/lib/appwrite";
+import { getCurrentUser, postLogin, saveTokenAsyncStorage } from "@/lib/userdatabase";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignIn = () => { 
   // Use the global context
-  const { setIsLoggedIn } = useGlobalContext();
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   // Define the state
-  const [user, setUser] = useState<AuthUserProps>({
-    email: '',
+  const [form, setForm] = useState<AuthUserProps>({
     username: "",
     password: "",
     rememberMe: false,
@@ -32,15 +31,19 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (value: AuthUserProps) => {
-    if (!user.email ||!user.password) {
+    if (!form.username ||!form.password) {
       Alert.alert("Please fill in all required fields");
       return;
     }
     try {
-      const result = await signIn(value.email, value.password);
-      setIsSubmitting(true);
-      setIsLoggedIn(true); // Update the global state
-      router.replace('/(tabs)')
+      const result = await postLogin(form);
+      if (!result.message) {
+        setUser(result);
+        setIsSubmitting(true);
+        setIsLoggedIn(true); // Update the global state
+      } else {
+        Alert.alert(result.message);
+      }
     } catch (error: any) {
       Alert.alert('Error', error.message);
     } finally {
@@ -67,32 +70,32 @@ const SignIn = () => {
         </View>
         <View className="mx-4 md:mx-12 p-4 md:p-12 bg-white rounded-2xl shadow-lg">
           <FormField
-            title="E-mail"
-            placeholder="E-mail"
-            value={user.email}
-            handleChangeText={(e) => setUser({ ...user, email: e })}
+            title="Username"
+            placeholder="Username"
+            value={form.username}
+            handleChangeText={(e) => setForm({ ...form, username: e })}
             otherStyles="mt-3"
           />
           <FormField
             title="Password"
             type="password"
             placeholder="Password"
-            value={user.password}
-            handleChangeText={(e) => setUser({ ...user, password: e })}
+            value={form.password}
+            handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
           />
           <View className="flex-row items-center">
             <Switch
-              value={user.rememberMe}
+              value={form.rememberMe}
               onValueChange={() =>
-                setUser({ ...user, rememberMe: !user.rememberMe })
+                setForm({ ...form, rememberMe: !form.rememberMe })
               }
             />
             <Text>Keep me signed in</Text>
           </View>
           <CustomButton
             title="Sign In"
-            onPress={() => handleSubmit(user)}
+            onPress={() => handleSubmit(form)}
             containerStyles="mt-6 bg-blue-500 py-3 font-psemibold text-white"
             disabled={isSubmitting}
             icon="enter"

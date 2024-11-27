@@ -1,23 +1,23 @@
 import { Image, Platform, View, Text, ScrollView, FlatList } from "react-native";
 import { Redirect, useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import CustomButton from "@/components/CustomButton";
-import { signOut } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import Loader from "@/components/Loader";
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { isLoading, isLoggedIn, setUser, setIsLoggedIn  } = useGlobalContext();
+  const { isLoading, isLoggedIn, user, setUser, setIsLoggedIn  } = useGlobalContext();
 
-  if (!isLoggedIn) { return <Redirect href={'/(auth)/sign-in'} />; }
+  if (!isLoading && !isLoggedIn) { return <Redirect href={'/(auth)/sign-in'} />; }
 
   const handleLogout = async () => {
-    await signOut();
+    await AsyncStorage.removeItem('@token');
     setUser(null);
     setIsLoggedIn(false);
     router.push("/(auth)/sign-in");
@@ -28,7 +28,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={{height: '100%'}}>
         <View className="w-full justify-center items-center h-full px-4">
           <HelloWave />
-            <Text className="text-black text-3xl font-bold">Welcome Back!</Text>
+            <Text className="text-black text-3xl font-bold">Welcome Back! {user?.firstName}</Text>
             <Text className="text-black text-lg">
               This is a simple mobile payment app using React Native and Expo.
             </Text>
