@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 async function postLogin( user: AuthUserProps ) {
     try {
-        const response = await fetch('http://192.168.48.1:4500/api/user/login', {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ const getCurrentUser = async () => {
     try {
         const token = await getTokenAsyncStorage();
         if (token) {
-            const response = await fetch('http://192.168.48.1:4500/api/user', {
+            const response = await fetch(`${process.env.EXPO_PUBLIC_LOCALHOST}/api/user`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -70,7 +70,7 @@ const getCurrentUser = async () => {
 
 const createUser = async ( body: UserDataProps) => {
     try {
-        const response = await fetch('http://192.168.48.1:4500/api/user/register', {
+        const response = await fetch(`${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

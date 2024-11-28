@@ -16,7 +16,7 @@ import { UserDataProps } from "@/constants/propUser";
 import { images } from "@/constants/Images";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
-import { createUser, postLogin } from "@/lib/userdatabase"
+import { createUser, postLogin } from "@/lib/userdatabase";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignUp = () => {
@@ -34,29 +34,33 @@ const SignUp = () => {
       Alert.alert("Please fill in all required fields");
       return;
     }
-    setIsSubmitting(true);
-    try {
-      const result = await createUser(userData);
-      if (result) {
-        Alert.alert("User created successfully!");
-        const result = await postLogin(userData);
-        setUser(result);
-        setIsSubmitting(true);
-        setIsLoggedIn(true); // Update the global state
+    if (userData.password !== userData.confirmPassword) {
+      Alert.alert("Passwords do not match");
+      return;
+    } else {
+      setIsSubmitting(true);
+      try {
+        const result = await createUser(userData);
+        if (result) {
+          Alert.alert("User created successfully!");
+          const result = await postLogin(userData);
+          setUser(result);
+          setIsSubmitting(true);
+          setIsLoggedIn(true); // Update the global state
+        }
+        // set it to global state
+      } catch (error: any) {
+        Alert.alert("Error", error.message);
+      } finally {
+        setIsSubmitting(false);
       }
-      // set it to global state
-      
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return (
     // Add your custom styles here or import them from a separate file
     <SafeAreaView className="flex-grow">
-      <ScrollView className="bg-gray-400">
+      <ScrollView className="bg-white">
         <View className="w-full justify-center">
           <Image source={images.VerismartLogo} className="w-[160px] h-[60px]" />
           <View className="w-screen flex-row justify-between items-center px-2 my-5">
@@ -69,14 +73,15 @@ const SignUp = () => {
               </Text>
             </Link>
           </View>
-          <View className="mx-4 md:mx-12 p-4 md:p-12 bg-white rounded-2xl shadow-lg">
+          <View className="mx-4 md:mx-12 p-4 md:p-12 rounded-2xl shadow-lg">
             <FormField
-              title="First Name"
-              placeholder="First Name"
+              title="Firstname"
+              placeholder="Firstname"
               value={userData.firstName}
               handleChangeText={(e) =>
                 setUserData({ ...userData, firstName: e })
               }
+              required
             />
             <FormField
               title="Lastname"
@@ -91,8 +96,11 @@ const SignUp = () => {
               title="Username"
               placeholder="Username"
               value={userData.username}
-              handleChangeText={(e) => setUserData({ ...userData, username: e })}
+              handleChangeText={(e) =>
+                setUserData({ ...userData, username: e })
+              }
               otherStyles="mt-7"
+              required
             />
             <FormField
               title="Password"
@@ -103,6 +111,7 @@ const SignUp = () => {
                 setUserData({ ...userData, password: e })
               }
               otherStyles="mt-7"
+              required
             />
             <FormField
               title="Confirm Password"
@@ -113,6 +122,7 @@ const SignUp = () => {
                 setUserData({ ...userData, confirmPassword: e })
               }
               otherStyles="mt-7"
+              required
             />
             <CustomButton
               title="Create Account"

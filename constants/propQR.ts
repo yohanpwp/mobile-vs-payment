@@ -1,6 +1,7 @@
 export interface QrGeneratorProps {
     customerName: string,
     amounts: string,
+    ref2: string,
     remark?: string,
 }
 
@@ -11,7 +12,6 @@ export interface QrReferenceProps extends QrGeneratorProps {
     expiryDate: string,
     numberOfTimes: number,
     ref1: string,
-    ref2: string,
     ref3: string,
     token: string
 }

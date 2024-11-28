@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, Alert } from "react-native";
 import React, { useState } from "react";
 
 import { ThemedView } from "@/components/ThemedView";
@@ -7,14 +7,45 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
 import { QrGeneratorProps } from "@/constants/propQR";
 import CustomButton from "@/components/CustomButton";
+import { getQRCode } from "@/lib/qrdatabase";
+import { router } from "expo-router";
+import { Validate } from "@/constants/Validates";
 
 const ScanPage = () => {
   const initialQrValue = {
     customerName: "",
+    ref2: "",
     amounts: "",
     remark: "",
   };
   const [qrValue, setQrValue] = useState<QrGeneratorProps>(initialQrValue);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const handleChange = async (value: QrGeneratorProps) => {
+    if (!value.customerName || !value.ref2 || !value.amounts) {
+      Alert.alert("Please fill in all required fields");
+      return;
+    } 
+    if (!Validate.value(value.ref2,["isUppercase", "isNumber"])) {
+      Alert.alert("Invalid reference. It should only contain uppercase letters and numbers");
+      return;
+    }
+    if (Validate.value(value.ref2,"isLowercase")) {
+      Alert.alert("Reference should not contain any lowercase letters");
+      return;
+    }
+    else {
+      try {
+        setIsSubmitting(true);
+        // const result = await getQRCode(value);
+        Alert.alert("QR Code generated successfully");
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+  };
+
   return (
     <SafeAreaView>
       <ThemedView className="h-full">
@@ -26,32 +57,43 @@ const ScanPage = () => {
           </View>
           <View className="mx-4 md:mx-12 mb-12 bg-gray-200 rounded-md drop-shadow-lg p-6 md:p-12">
             <FormField
-              title="Customer Name:"
+              title="Customer Name"
               value={qrValue.customerName}
               placeholder="Customer*"
               handleChangeText={(e) =>
                 setQrValue({ ...qrValue, customerName: e })
               }
+              required
             />
             <FormField
-              title="Amounts:"
+              title="Amounts"
               value={qrValue.amounts}
               placeholder="Fill your amount here*"
               keyboardType="number-pad"
               handleChangeText={(e) => setQrValue({ ...qrValue, amounts: e })}
               otherStyles="mt-7"
+              required
             />
             <FormField
-              title="Remark:"
+              title="Reference"
+              value={qrValue.ref2}
+              placeholder="Reference*"
+              handleChangeText={(e) => setQrValue({ ...qrValue, ref2: e })}
+              otherStyles="mt-7"
+              required
+            />
+            <FormField
+              title="Remark"
               value={qrValue.remark}
               placeholder="Remark"
               handleChangeText={(e) => setQrValue({ ...qrValue, remark: e })}
-              otherStyles="my-7"
+              otherStyles="mt-7 my-7"
             />
             <View className="flex-row">
               <CustomButton
                 title="Create QR Code"
-                onPress={() => console.log(qrValue)}
+                disabled={isSubmitting}
+                onPress={() => handleChange(qrValue)}
                 containerStyles="flex-1"
               />
               <CustomButton

@@ -16,7 +16,7 @@ import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
 import { Link, router } from "expo-router";
 import { AuthUserProps } from "@/constants/propUser";
-import { getCurrentUser, postLogin, saveTokenAsyncStorage } from "@/lib/userdatabase";
+import { postLogin } from "@/lib/userdatabase";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 const SignIn = () => { 
@@ -54,7 +54,7 @@ const SignIn = () => {
   return (
     // Add your custom styles here or import them from a separate file
     <SafeAreaView className="flex-1">
-      <ScrollView className="bg-gray-400">
+      <ScrollView className="bg-white">
         <View className="w-full justify-center min-w-[85vh]">
           <Image source={images.VerismartLogo} className="w-[160px] h-[60px]" />
           <View className="w-screen flex-row justify-between items-center px-4 my-5">
@@ -68,13 +68,15 @@ const SignIn = () => {
             </Link>
           </View>
         </View>
-        <View className="mx-4 md:mx-12 p-4 md:p-12 bg-white rounded-2xl shadow-lg">
+        <View className="mx-4 md:mx-12 p-4 md:p-12 rounded-2xl shadow-lg">
           <FormField
             title="Username"
             placeholder="Username"
             value={form.username}
             handleChangeText={(e) => setForm({ ...form, username: e })}
             otherStyles="mt-3"
+            autoComplete="username"
+            required
           />
           <FormField
             title="Password"
@@ -83,6 +85,7 @@ const SignIn = () => {
             value={form.password}
             handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
+            required
           />
           <View className="flex-row items-center">
             <Switch
