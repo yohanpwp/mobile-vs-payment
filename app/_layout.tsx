@@ -11,6 +11,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import GlobalProvider from "@/context/GlobalProvider";
+import QrImageGallery from "./qr/image";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -51,6 +52,7 @@ export default function RootLayout() {
           <Stack.Screen name="about" />
           {/* <Stack.Screen name="/search/[query]" options={{ headerShown: false }} /> */}
           <Stack.Screen name="+not-found" />
+          <Stack.Screen name="qr/image" options={{ presentation: 'modal', headerTitle: 'Generated QR Code'}} />
         </Stack>
       </GlobalProvider>
     </ThemeProvider>

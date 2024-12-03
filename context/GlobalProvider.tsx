@@ -16,6 +16,8 @@ interface GlobalContextValue {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
   setUser: Dispatch<SetStateAction<Object  | null>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  propsValue: any;
+  setPropsValue: Dispatch<SetStateAction<any>>;
 }
 
 const GlobalContext = createContext<GlobalContextValue>({
@@ -25,6 +27,8 @@ const GlobalContext = createContext<GlobalContextValue>({
   setIsLoggedIn: () => {}, // Default no-op function to satisfy the type
   setUser: () => {},
   setIsLoading: () => {},
+  propsValue: [],
+  setPropsValue: () => {}, // Default no-op function to satisfy the type
 });
 
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -33,6 +37,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<Object | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [propsValue, setPropsValue] = useState([]);
 
   useEffect(() => {
     getCurrentUser()
@@ -60,6 +65,8 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setIsLoggedIn,
         setUser,
         setIsLoading,
+        propsValue,
+        setPropsValue,
       }}
     >
       {children}

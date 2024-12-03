@@ -7,9 +7,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
 import { QrGeneratorProps } from "@/constants/propQR";
 import CustomButton from "@/components/CustomButton";
-import { getQRCode } from "@/lib/qrdatabase";
+import { qrBase } from "@/lib/qrdatabase";
 import { router } from "expo-router";
 import { Validate } from "@/constants/Validates";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const ScanPage = () => {
   const initialQrValue = {
@@ -18,6 +19,7 @@ const ScanPage = () => {
     amounts: "",
     remark: "",
   };
+  const { setPropsValue } = useGlobalContext();
   const [qrValue, setQrValue] = useState<QrGeneratorProps>(initialQrValue);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleChange = async (value: QrGeneratorProps) => {
@@ -36,8 +38,10 @@ const ScanPage = () => {
     else {
       try {
         setIsSubmitting(true);
-        // const result = await getQRCode(value);
+        const result = await qrBase.getQRCode(value);
+        setPropsValue(result);
         Alert.alert("QR Code generated successfully");
+        router.push(`/qr/image`);
       } catch (error) {
         console.error(error);
       } finally {

@@ -8,7 +8,7 @@ import Loader from "@/components/Loader";
 const AuthLayout = () => {
   const { isLoading, isLoggedIn } = useGlobalContext();
 
-  if (!isLoading && isLoggedIn) return <Redirect href="/(tabs)" />;
+  // if (!isLoading && isLoggedIn) return <Redirect href="/(tabs)" />;
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { Tabs, Redirect } from 'expo-router';
+import { StatusBar } from "expo-status-bar";
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -11,11 +12,20 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarHideOnKeyboard: true,
         headerShown: false,
+        tabBarStyle: {
+          justifyContent: "center",
+          alignItems: "center",
+          borderTopWidth: 1,
+          borderTopColor: "#232533",
+          paddingVertical: 30,
+          height: 60,
+        },
       }}>
       <Tabs.Screen
         name="index"
@@ -54,5 +64,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </>
   );
 }

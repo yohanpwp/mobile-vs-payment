@@ -41,6 +41,7 @@ const SignIn = () => {
         setUser(result);
         setIsSubmitting(true);
         setIsLoggedIn(true); // Update the global state
+        router.replace('/')
       } else {
         Alert.alert(result.message);
       }

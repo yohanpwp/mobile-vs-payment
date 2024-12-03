@@ -6,7 +6,7 @@ import {
   KeyboardTypeOptions,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 
 interface FormFieldProps {
@@ -33,6 +33,12 @@ const FormField = ({
   // Add state to show/hide password
   const [showPassword, setShowPassword] = useState(false);
   const [touched, setTouched] = useState(false);
+
+  useEffect(() => {
+    if (touched) {
+      setTouched(false);
+    }}, []
+  )
 
   const handleBlur = () => {
     setTouched(true);

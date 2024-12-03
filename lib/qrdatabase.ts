@@ -1,4 +1,5 @@
 import { QrGeneratorProps } from "@/constants/propQR";
+import { getTokenAsyncStorage } from "./userdatabase";
 
 // ฟังก์ชั่นตั้งเวลาจากเวลาปัจจุบันกี่นาที
 function addTimeinMinutes(min: number) {
@@ -94,43 +95,168 @@ async function postScbToken() {
   } catch (err) {
     console.log(err);
   }
+}
+
+// สร้าง QR Code จากค่า value ที่ใส่เข้ามา
+async function getQRCode(values: QrGeneratorProps) {
+  let expiryDate = addTimeinMinutes(1440); // Expires in 1 day
+  let ranHex8digits = getRanHex(8); //random hexadecimal generator 8 digits
+  const token = await postScbToken();
+  const qrHead = {
+    "Content-Type": "application/json",
+    authorization: "Bearer " + token, //ต้องรับค่า token ไว้ให้ นปก.
+    resourceOwnerId: "l78c16602cd0b24922a2d42292cf71cc7f",
+    requestUId: guid,
+    "accept-language": "EN",
+  };
+  const qrBody = {
+    qrType: "PP",
+    ppType: "BILLERID",
+    ppId: "010555413150501",
+    amounts: values.amounts,
+    expiryDate: expiryDate,
+    numberOfTimes: 1,
+    ref1: ranHex8digits,
+    ref2: values.ref2,
+    ref3: "VER",
+    token: token,
+  };
+  const url = "https://api.scb.eorder.smart-ms2.com/api/scb/qrcode";
+  let config = {
+    method: "POST",
+    maxBodyLength: Infinity,
+    headers: qrHead,
+    body: JSON.stringify(qrBody),
+  };
+  try {
+    const response = await fetch(url, config);
+    const json = await response.json();
+    return {
+      image: json.data.qrImage,
+      qrBody: qrBody,
+      customerName: values.customerName,
+      remark: values?.remark,
+    }; //ดึงข้อมูล qrImage จาก property data ใน web API
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+//Save ข้อมูล Qr code ลงใน database
+async function postSaveHistoryQrCode(value: any) {
+  // ตั้งค่า URL ของ API ที่ต้องการใช้
+  let token = await getTokenAsyncStorage();
+  let config = {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(value), // ส่งข้อมูล username, password ไปยัง API
+  };
+  // ส่ง request และรับ response ที่ได้มา
+  try {
+    let response = await fetch(
+      `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/payment/history`,
+      config
+    );
+    let json = await response.json();
+    return { message: "Save succesfull", json };
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+
+// ฟังก์ชั่นเรียกดูข้อมูลการสร้าง QR Code จากฐานข้อมูลเก็บเป็นประวัติ
+async function getHistoryQrCode(value: any) {
+  // ตั้งค่า URL ของ API ที่ต้องการใช้
+  let url = `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/payment/history/read`;
+  let config = {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(value), // ส่งข้อมูล username, password ไปยัง API
+  };
+  // ส่ง request และรับ response ที่ได้มา
+  try {
+    let response = await fetch(url, config);
+    let json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+
+// ฟังก์ชั่นเรียกดูข้อมูลการจ่ายเงิน QR Code จากฐานข้อมูลเก็บเป็นประวัติ
+const checkQrResponse = async (ref) => {
+  // ตั้งค่า URL ของ API ที่ต้องการใช้
+  let url = `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/payment/history/response`;
+  let config = {
+    method: "POST",
+    body: JSON.stringify({ ref1: ref }), // ส่งข้อมูล username, password ไปยัง API
+  };
+  // ส่ง request และรับ response ที่ได้มา
+  try {
+    let response = await fetch(url, config);
+    let json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 };
 
-export async function getQRCode( values: QrGeneratorProps ) {
-    let expiryDate = addTimeinMinutes(1440); // Expires in 1 day
-    let ranHex8digits = getRanHex(8); //random hexadecimal generator 8 digits
-    const token = await postScbToken();
-    const qrHead = {
-      'Content-Type': 'application/json',
-      authorization: 'Bearer ' + token, //ต้องรับค่า token ไว้ให้ นปก.
-      resourceOwnerId: 'l78c16602cd0b24922a2d42292cf71cc7f',
-      requestUId: guid,
-      'accept-language': 'EN'
-    };
-    const qrBody = {
-      qrType: 'PP',
-      ppType: 'BILLERID',
-      ppId: '010555413150501',
-      amount: values.amounts,
-      expiryDate: expiryDate,
-      numberOfTimes: 1,
-      ref1: ranHex8digits,
-      ref2: values.ref2,
-      ref3: 'VER',
-      token: token
-    };
-    const url = 'https://api.scb.eorder.smart-ms2.com/api/scb/qrcode'
-    let config = {
-      method: 'POST',
-      maxBodyLength: Infinity,
-      headers: qrHead,
-      body: JSON.stringify(qrBody)
-    };
-    try {
-      const response = await fetch(url, config);
-      const json = await response.json();
-      return { image: json.data.qrImage, qrBody: qrBody }; //ดึงข้อมูล qrImage จาก property data ใน web API
-    } catch (err) {
-        console.log(err);
-    }
+// ฟังก์ชั่นแก้ไขข้อมูลการ QR Code จากฐานข้อมูล
+const editHistoryQrCode = async (value) => {
+  // ตั้งค่า URL ของ API ที่ต้องการใช้
+  let url = `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/payment/history/edit`;
+  let token = await getTokenAsyncStorage();
+  let config = {
+    method: "PUT",
+    maxBodyLength: Infinity,
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(value), // ส่งข้อมูล username, password ไปยัง API
   };
+  // ส่ง request และรับ response ที่ได้มา
+  try {
+    let response = await fetch(url, config);
+    let json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+// ฟังก์ชั่นลบข้อมูลการ QR Code จากฐานข้อมูล
+const deleteHistoryQrCode = async (value) => {
+  // ตั้งค่า URL ของ API ที่ต้องการใช้
+  let url = `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/payment/history/delete`;
+  let token = await getTokenAsyncStorage();
+  let config = {
+    method: "PUT",
+    maxBodyLength: Infinity,
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(value), // ส่งข้อมูล username, password ไปยัง API
+  };
+  // ส่ง request และรับ response ที่ได้มา
+  try {
+    let response = await fetch(url, config);
+    let json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+export const qrBase = { getQRCode, postSaveHistoryQrCode, getHistoryQrCode, checkQrResponse, editHistoryQrCode, deleteHistoryQrCode } 

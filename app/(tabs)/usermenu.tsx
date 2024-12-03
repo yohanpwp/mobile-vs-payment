@@ -12,6 +12,7 @@ const Usermenu = () => {
           <ThemedText>SCB Payment</ThemedText>
         </View>
         {/* Create a new data table */}
+        <Text>Holy Shit</Text>
         
       </ThemedView>
     </SafeAreaView>
