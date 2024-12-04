@@ -125,7 +125,7 @@ const History = () => {
                     </View>
                     <View className="absolute -right-2 -bottom-7">
                       <View className="h-8 bg-green-500 rounded-5">
-                        <ThemedText>{data.item.status}</ThemedText>
+                        <ThemedText>{displayText.showIconStatus(data.item.status)}</ThemedText>
                       </View>
                     </View>
                   </View>

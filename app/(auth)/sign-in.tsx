@@ -36,10 +36,10 @@ const SignIn = () => {
       return;
     }
     try {
+      setIsSubmitting(true);
       const result = await postLogin(form);
       if (!result.message) {
         setUser(result);
-        setIsSubmitting(true);
         setIsLoggedIn(true); // Update the global state
         router.replace('/')
       } else {

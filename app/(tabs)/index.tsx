@@ -14,7 +14,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const { isLoading, isLoggedIn, user, setUser, setIsLoggedIn  } = useGlobalContext();
 
-  // if (!isLoading && !isLoggedIn) { return <Redirect href={'/(auth)/sign-in'} />; }
+  if (!isLoading && !isLoggedIn) { return <Redirect href={'/(auth)/sign-in'} />; }
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('@token');

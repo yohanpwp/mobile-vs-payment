@@ -33,7 +33,7 @@ const usePagination = <T extends any[]>() => {
       }
 
       if (result.status) {
-        setData(page === 1 ? result.data : [...page, ...result.data]);
+        setData(page === 1 ? result.data : [...result, ...result.data]);
         setTotalResult(result.totalResult);
         setPageNo(result.pageNo);
         setPerPage(result.perPage)
