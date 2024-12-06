@@ -5,6 +5,7 @@ import { ThemedView } from "@/components/ThemedView";
 import CustomButton from "@/components/CustomButton";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { qrBase } from "@/lib/qrdatabase";
+import { displayNumber, displayText } from "@/components/display/displayText";
 const QrImageGallery = () => {
   const { propsValue } = useGlobalContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,7 +59,7 @@ const QrImageGallery = () => {
                 Ref2 : {propsValue?.qrBody.ref2}
               </Text>
               <Text className="text-xl first-letter:capitalize">
-                Remark : {propsValue?.remark ? propsValue?.remark : "-"}
+                Remark : {displayText.showOnlyAvailableText(propsValue?.qrBody.remark)}
               </Text>
             </View>
             <CustomButton

@@ -1,22 +1,28 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { ThemedView } from '@/components/ThemedView'
-import { ThemedText } from '@/components/ThemedText'
+import { View, Text } from "react-native";
+import React from "react";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
+import MenuItem, { ItemListProps } from "@/components/navigation/MenuItem";
 
 const Usermenu = () => {
+  const items: ItemListProps = [
+    { label: "Edit Profile", icon: "id-card-sharp", route: "Profile" },
+    { label: "Settings", icon: "settings-sharp", route: "Settings" },
+    { label: "Logout", icon: "log-out-sharp", route: "SignOut" },
+  ];
+
   return (
-    <SafeAreaView className='h-full'>
-      <ThemedView className='h-full'>
-        <View className='flex-1'>
+    <ThemedView className="h-full">
+      <View className="flex-1">
+        <View className="flex-1 m-8">
+          <MenuItem itemList={items} />
+        </View>
+        <View className="flex bg-green-500">
           <ThemedText>SCB Payment</ThemedText>
         </View>
-        {/* Create a new data table */}
-        <Text>Holy Shit</Text>
-        
-      </ThemedView>
-    </SafeAreaView>
-  )
-}
+      </View>
+    </ThemedView>
+  );
+};
 
-export default Usermenu
+export default Usermenu;

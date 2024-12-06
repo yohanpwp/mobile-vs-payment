@@ -42,11 +42,11 @@ const CustomButton = ({
         >
           {title}
         </Text>
-        <Ionicons
+        {icon && <Ionicons
           name={icon}
           size={28}
           color={iconColor}
-        />
+        />}
       </View>
     </TouchableOpacity>
   );

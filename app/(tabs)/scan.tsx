@@ -98,12 +98,12 @@ const ScanPage = () => {
                 title="Create QR Code"
                 disabled={isSubmitting}
                 onPress={() => handleChange(qrValue)}
-                containerStyles="flex-1"
+                containerStyles="w-3/4"
               />
               <CustomButton
                 title="Clear"
                 onPress={() => setQrValue(initialQrValue)}
-                containerStyles="ml-4 flex-1 bg-primary"
+                containerStyles="ml-4 w-1/4 bg-primary"
               />
             </View>
           </View>
