@@ -9,6 +9,8 @@ import {
 } from "react";
 import { getCurrentUser } from "@/lib/userdatabase"
 import { UserDataProps } from "@/constants/propUser"
+import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface GlobalContextValue {
   isLoggedIn: boolean;
@@ -19,6 +21,7 @@ interface GlobalContextValue {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   propsValue: any;
   setPropsValue: Dispatch<SetStateAction<any>>;
+  logout: () => void;
 }
 
 const GlobalContext = createContext<GlobalContextValue>({
@@ -30,6 +33,7 @@ const GlobalContext = createContext<GlobalContextValue>({
   setIsLoading: () => {},
   propsValue: [],
   setPropsValue: () => {}, // Default no-op function to satisfy the type
+  logout: () => {}
 });
 
 export const useGlobalContext = () => useContext(GlobalContext);
@@ -40,15 +44,22 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [propsValue, setPropsValue] = useState([]);
 
+  const router = useRouter();
+  const logout = async () => {
+    await AsyncStorage.removeItem('@token');
+    setUser(null);
+    setIsLoggedIn(false);
+    router.push("/(auth)/sign-in");
+  }
+
   useEffect(() => {
     getCurrentUser()
       .then((res) => {
-        if (res) {
+        if (res.message) { 
+          logout();
+        } else if (res) {
           setIsLoggedIn(true);
           setUser(res);
-        } else { 
-          setIsLoggedIn(false);
-          setUser(null);
         }
       }).catch((err) => {
         console.error(err);
@@ -68,6 +79,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading,
         propsValue,
         setPropsValue,
+        logout
       }}
     >
       {children}

@@ -27,7 +27,7 @@ const CustomButton = ({
       className={
         !disabled
           ? `bg-blue-600 rounded-xl min-h-[62px] justify-center items-center ${containerStyles}`
-          : `${containerStyles} bg-slate-500 rounded-xl min-h-[62px] justify-center items-center`
+          : `bg-slate-500 rounded-xl min-h-[62px] justify-center items-center`
       }
       disabled={disabled}
       onPress={onPress}

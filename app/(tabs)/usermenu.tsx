@@ -3,12 +3,15 @@ import React from "react";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import MenuItem, { ItemListProps } from "@/components/navigation/MenuItem";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const Usermenu = () => {
+  const { logout } = useGlobalContext();
+
   const items: ItemListProps = [
-    { label: "Edit Profile", icon: "id-card-sharp", route: "Profile" },
-    { label: "Settings", icon: "settings-sharp", route: "Settings" },
-    { label: "Logout", icon: "log-out-sharp", route: "SignOut" },
+    { label: "Edit Profile", icon: "id-card-sharp", route: "/(tabs)" },
+    { label: "Settings", icon: "settings-sharp" },
+    { label: "Logout", icon: "log-out-sharp", onPress: logout },
   ];
 
   return (

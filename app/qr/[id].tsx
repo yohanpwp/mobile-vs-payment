@@ -6,13 +6,16 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Page = () => {
   const { propsValue } = useGlobalContext();
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
   const result = propsValue[id];
-  navigation.setOptions({ title: result.customer });
+  React.useEffect(() => {
+    navigation.setOptions({ title: result.customer });
+  }, []);
 
   return (
     <SafeAreaView className="flex-1">
@@ -28,7 +31,9 @@ const Page = () => {
           ></Image>
         </View>
         <View className="flex mx-5 sm:mx-10">
+          <MaterialCommunityIcons name="account-cash" size={30} color="black" />
           <ThemedText type="subtitle">{result?.amounts}</ThemedText>
+          <MaterialCommunityIcons name="account" size={30} color="black" />
           <ThemedText type="subtitle">{result?.customer}</ThemedText>
           {!result?.scbResponse && (
             <View>

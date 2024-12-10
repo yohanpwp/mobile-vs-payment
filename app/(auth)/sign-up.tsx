@@ -73,7 +73,7 @@ const SignUp = () => {
               </Text>
             </Link>
           </View>
-          <View className="mx-4 md:mx-12 p-4 md:p-12 rounded-2xl shadow-lg">
+          <View className="mx-4 md:mx-12 p-8 md:p-12 rounded-2xl shadow-md">
             <FormField
               title="Firstname"
               placeholder="Firstname"

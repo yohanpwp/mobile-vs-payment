@@ -6,16 +6,7 @@ module.exports = function (api) {
       jsxImportSource: "nativewind"
     }], "nativewind/babel"],
     plugins: [
-      "nativewind/babel",
       "react-native-reanimated/plugin",
-      ["module-resolver", {
-        root: ["./"],
-
-        alias: {
-          "@": "./",
-          "tailwind.config": "./tailwind.config.js"
-        }
-      }]
-    ],
+    ]
   };
 };

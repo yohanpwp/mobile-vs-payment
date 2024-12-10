@@ -55,7 +55,7 @@ const ScanPage = () => {
       <ThemedView className="h-full">
         <ScrollView>
           <View className="flex p-8">
-            <ThemedText className="text-2xl font-pextrabold">
+            <ThemedText type="title">
               SCB Payment
             </ThemedText>
           </View>
@@ -103,7 +103,7 @@ const ScanPage = () => {
               <CustomButton
                 title="Clear"
                 onPress={() => setQrValue(initialQrValue)}
-                containerStyles="ml-4 w-1/4 bg-primary"
+                containerStyles="ml-4 w-1/4 bg-slate-400"
               />
             </View>
           </View>
