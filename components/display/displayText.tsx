@@ -9,23 +9,20 @@ const showIconStatus = (status: string | undefined) => {
   switch (status) {
     case "Paid":
       return (
-        <View className="flex-row py-1 pr-2 gap-1 justify-evenly items-center">
-          <Ionicons name={"checkmark-circle"} size={28} color="green" />
-          <Text className="text-center text-green-600">{status}</Text>
+        <View className="flex-row py-1 px-2 items-center bg-green-500 rounded-lg">
+          <Text className="text-center text-white">{status}</Text>
         </View>
       );
     case "Canceled":
       return (
-        <View className="flex-row py-1 pr-2 gap-1 justify-evenly items-center">
-          <Ionicons name={"close-circle"} size={28} color="red" />
-          <Text className="text-center text-red-600">{status}</Text>
+        <View className="flex-row py-1 px-2 items-center bg-red-500 rounded-lg">
+          <Text className="text-center text-white">{status}</Text>
         </View>
       );
     case "Created":
       return (
-        <View className="flex-row py-1 pr-2 gap-1 justify-evenly items-center">
-          <Ionicons name={"add-circle"} size={28} color="blue" />
-          <Text className="text-center text-blue-600">{status}</Text>
+        <View className="flex-row py-1 px-2 items-center bg-blue-800 rounded-lg">
+          <Text className="text-center text-white">{status}</Text>
         </View>
       );
     default:

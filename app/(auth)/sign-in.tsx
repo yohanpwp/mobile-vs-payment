@@ -18,10 +18,12 @@ import { Link, router } from "expo-router";
 import { AuthUserProps } from "@/constants/propUser";
 import { postLogin } from "@/lib/userdatabase";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import { useQrHistoryStore } from "@/context/QrHistoryStore";
 
 const SignIn = () => { 
   // Use the global context
   const { setUser, setIsLoggedIn } = useGlobalContext();
+  const { fetchData } = useQrHistoryStore();
   // Define the state
   const [form, setForm] = useState<AuthUserProps>({
     username: "",
@@ -40,6 +42,7 @@ const SignIn = () => {
       const result = await postLogin(form);
       if (!result.message) {
         setUser(result);
+        fetchData(result);
         setIsLoggedIn(true); // Update the global state
         router.replace('/')
       } else {

@@ -11,6 +11,7 @@ import { getCurrentUser } from "@/lib/userdatabase"
 import { UserDataProps } from "@/constants/propUser"
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQrHistoryStore } from "./QrHistoryStore";
 
 interface GlobalContextValue {
   isLoggedIn: boolean;
@@ -44,6 +45,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [propsValue, setPropsValue] = useState([]);
 
+  const { fetchData } = useQrHistoryStore();
   const router = useRouter();
   const logout = async () => {
     await AsyncStorage.removeItem('@token');
@@ -55,11 +57,14 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     getCurrentUser()
       .then((res) => {
-        if (res.message) { 
+        if (res?.message) { 
           logout();
         } else if (res) {
           setIsLoggedIn(true);
           setUser(res);
+          fetchData(res); // Fetch QR history data when user logs in
+        } else {
+          logout();
         }
       }).catch((err) => {
         console.error(err);

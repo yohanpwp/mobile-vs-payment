@@ -1,14 +1,13 @@
-import { View, Text } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react'
 
-const initialData = {
-    data: [],
+const initialData = ({
+    data: [] as any,
     totalResult: 0,
     status: true,
     pageNo: 1,
     perPage: 10,
     totalPages: 1
-}
+})
 
 const usePagination = <T extends any[]>() => {
     const [initialLoader, setInitialLoader] = useState<boolean>(true);
@@ -19,20 +18,23 @@ const usePagination = <T extends any[]>() => {
     const [totalPages, setTotalPages] = useState(initialData.totalPages);
     const [refreshing, setRefreshing] = useState(false);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [fetchData, setFetchData] = useState<Promise<T>>();
 
     //Fetch Data for given page
-    const fetchData = async (resultOld: T, page: number, perPage = 10) => {
+    const updateData = async (rfunction: Promise<T> , page: number, perPage = 10) => {
       try {
-      const result = {
-        data: resultOld,
-        totalResult: resultOld.length,
-        status: true,
-        pageNo: page,
-        perPage: perPage,
-        totalPages: Math.ceil(resultOld.length / perPage)
-      }
+        setFetchData(rfunction)
+        const resultOld = await rfunction
 
-      if (result.status) {
+      if (resultOld) {
+        const result = {
+          data: resultOld,
+          totalResult: resultOld.length,
+          status: true,
+          pageNo: page,
+          perPage: perPage,
+          totalPages: Math.ceil(resultOld.length / perPage) || 10
+        }
         setData(result.data);
         setTotalResult(result.totalResult);
         setPageNo(result.pageNo);
@@ -49,22 +51,27 @@ const usePagination = <T extends any[]>() => {
       }
     };
 
+    useEffect(() => {
+      updateData(fetchData as Promise<T>, pageNo);
+    }, []);
+   
   const handleRefresh = useCallback( () => {
     setRefreshing(true);
-    fetchData(data, 1, perPage);
+    setInitialLoader(true);
+    updateData(fetchData as Promise<T>, 1, perPage);
   }, []);
 
   const loadMore = () => {
     if (!loadingMore && pageNo < totalPages) {
       setLoadingMore(true);
       setPageNo(pageNo + 1);
-      fetchData(data, pageNo, perPage);
+      updateData(fetchData as Promise<T>, pageNo, perPage);
     }
   }
 
   return {
     data,
-    fetchData,
+    updateData,
     totalResult,
     loadingMore,
     handleRefresh,

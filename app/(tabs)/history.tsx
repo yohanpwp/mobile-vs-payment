@@ -16,26 +16,14 @@ import { qrBase } from "@/lib/qrdatabase";
 import { displayText, displayNumber } from "@/components/display/displayText";
 import Loader from "@/components/Loader";
 import usePagination from "@/hooks/usePagination";
-
-interface qrTableDataProps {
-  id: number;
-  qrCode: string;
-  amounts: string;
-  customer: string;
-  status: string;
-  ref1: string;
-  ref2: string;
-  ref3: string;
-  createdAt: string;
-  remark: string;
-  scbResponse: string;
-}
+import { qrTableDataProps, useQrHistoryStore } from "@/context/QrHistoryStore";
 
 const History = () => {
-  const { user, isLoading, setIsLoading, setPropsValue } = useGlobalContext();
+  const { user, isLoading, setIsLoading } = useGlobalContext();
+  const { fetchData } = useQrHistoryStore();
   const {
     data,
-    fetchData,
+    updateData,
     totalResult,
     loadingMore,
     handleRefresh,
@@ -51,9 +39,7 @@ const History = () => {
     const getData = async () => {
       setIsLoading(true);
       try {
-        const result: qrTableDataProps[] = await qrBase.getHistoryQrCode(user);
-        setPropsValue(result);
-        fetchData(result, 1, 4);
+        updateData(fetchData(user), 1, 4);
       } catch (error) {
         console.error("Error fetching data", error);
       } finally {
@@ -61,14 +47,14 @@ const History = () => {
       }
     };
     getData();
-  }, [refreshing]);
+  }, []);
 
   const renderFooter = () => {
     if (!loadingMore || data.length < 4) return null;
     return (
       <View>
         <Text style={{ alignSelf: "center", fontSize: 20 }}>Load More</Text>
-        <ActivityIndicator size="small" color="#0000ff" />
+        <ActivityIndicator animating size="large" color="#0000ff" />
       </View>
     );
   };
@@ -88,26 +74,24 @@ const History = () => {
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           }
           ListFooterComponent={renderFooter}
-          initialNumToRender={5}
           onEndReached={loadMore}
-          onEndReachedThreshold={0.5}
-          debug={true}
+          onEndReachedThreshold={0.1}
+          // debug={true}
           renderItem={(data) => {
-            if (!data) {
+            if (initialLoader) {
               return (
                 <View>
+                  <ActivityIndicator animating size="large" color="#0000ff" />
                   <ThemedText>No data found.</ThemedText>
                 </View>
               );
             } else {
               return (
                 <View className="flex-row p-4 bg-slate-100 mx-2 my-3 rounded-lg shadow-md min-h-[220px]">
-                  <View className="w-3/4 h-auto">
+                  <View className="w-full h-auto">
                     <View className="flex flex-row gap-1 items-center">
-                      <View className="rounded-full p-1 bg-slate-100 border-cyan-400 border-2 dark:bg-slate-400">
-                        <ThemedText type="subtitle">
-                          {data.index + 1}
-                        </ThemedText>
+                      <View className="justify-center content-center">
+                        {displayText.showIconStatus(data.item.status)}
                       </View>
                       <ThemedText type="subtitle">
                         {displayText.showOnlyAvailableText(data.item.customer)}
@@ -137,13 +121,6 @@ const History = () => {
                         See Instruction
                       </Text>
                     </Link>
-                  </View>
-                  <View className="w-1/4 columns-3 h-auto justify-between ml-1">
-                    <View className="flex justify-end">
-                      <View className="justify-center content-center">
-                        {displayText.showIconStatus(data.item.status)}
-                      </View>
-                    </View>
                   </View>
                 </View>
               );
