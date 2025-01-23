@@ -1,38 +1,58 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import { useRouter, Href } from 'expo-router';
-import React from 'react'
+import { View, Text, TouchableOpacity } from "react-native";
+import { useRouter, Href } from "expo-router";
+import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ComponentPropsWithRef } from "react";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export type ItemListProps = {
-    label: string;
-    icon: ComponentPropsWithRef<typeof Ionicons>["name"];
-    route?: Href;
-    onPress?: () => void;
-  }[]
+  label: string;
+  icon: ComponentPropsWithRef<typeof Ionicons>["name"];
+  route?: Href;
+  onPress?: () => void;
+}[];
 
-const MenuItem = ({ itemList } : { itemList: ItemListProps }) => {
-  const navigation = useRouter()
-  const handleClick = (route: Href | undefined, onPress: (() => void) | undefined) => {
+const MenuItem = ({
+  itemList,
+  classname,
+}: {
+  itemList: ItemListProps;
+  classname?: string;
+}) => {
+  const navigation = useRouter();
+  const handleClick = (
+    route: Href | undefined,
+    onPress: (() => void) | undefined
+  ) => {
     if (route) {
-    navigation.navigate(route)
+      navigation.navigate(route);
     } else if (onPress) {
-      onPress()
+      onPress();
     }
-  }
+  };
 
   return (
-    <View className='flex-1'>
+    <View className="flex-1">
       {itemList.map((item, index) => (
-        <TouchableOpacity key={index} onPress={() => handleClick(item.route, item.onPress)}>
-            <View className='flex-row px-4 sm:px-8 h-[120px] bg-slate-200 border-2 mt-2 border-black items-center'>
-                <Ionicons name={item.icon} size={26} color="black" />
-                <Text className='ml-4'>{item.label}</Text>
+        <TouchableOpacity
+          key={index}
+          onPress={() => handleClick(item.route, item.onPress)}
+        >
+          <View
+            className={`flex-row px-4 sm:px-8 bg-slate-200 py-6 border-b-2 border-gray-400 items-center justify-between ${classname}`}
+          >
+            <View className="flex-row items-center">
+              <Ionicons name={item.icon} size={32} color="black" />
+              <Text className="ml-4 text-xl">{item.label}</Text>
             </View>
+            <View>
+              <AntDesign name="right" size={18} color="gray" />
+            </View>
+          </View>
         </TouchableOpacity>
       ))}
     </View>
-  )
-}
+  );
+};
 
-export default MenuItem
+export default MenuItem;

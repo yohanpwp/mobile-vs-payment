@@ -25,6 +25,13 @@ const AuthLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="forget-password"
+          options={{
+            headerTitle: "",
+            headerTitleStyle: { color: "black" },
+          }}
+          />
       </Stack>
       <StatusBar backgroundColor="#161622" style="light" />
     </>

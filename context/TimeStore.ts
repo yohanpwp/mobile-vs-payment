@@ -11,7 +11,7 @@ const useTimeStore = create<TimeStore>((set) => ({
   time: new Date(),
   now: new Date(),
   updateTime: () => set((state) => ({ time: new Date() })),
-  updateNow: () => set((state) => ({ now: new Date() })),
+  updateNow: () =>  set((state) => ({ now: new Date() })),
 }));
 
 export default useTimeStore;

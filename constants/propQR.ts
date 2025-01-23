@@ -15,3 +15,4 @@ export interface QrReferenceProps extends QrGeneratorProps {
     ref3: string,
     token: string
 }
+

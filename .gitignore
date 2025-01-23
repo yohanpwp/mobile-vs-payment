@@ -10,6 +10,8 @@ npm-debug.*
 *.orig.*
 web-build/
 .env
+android
+.idea
 
 # macOS
 .DS_Store
@@ -19,3 +21,7 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+
+#bulid
+android/gradle.properties
+android/app/my-upload-key.keystore

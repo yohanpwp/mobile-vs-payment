@@ -22,6 +22,7 @@ interface GlobalContextValue {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   propsValue: any;
   setPropsValue: Dispatch<SetStateAction<any>>;
+  refresh: () => void; 
   logout: () => void;
 }
 
@@ -34,6 +35,7 @@ const GlobalContext = createContext<GlobalContextValue>({
   setIsLoading: () => {},
   propsValue: [],
   setPropsValue: () => {}, // Default no-op function to satisfy the type
+  refresh: () => {},
   logout: () => {}
 });
 
@@ -50,11 +52,12 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     await AsyncStorage.removeItem('@token');
     setUser(null);
+    setPropsValue([]);
     setIsLoggedIn(false);
-    router.push("/(auth)/sign-in");
+    router.replace("/(auth)/sign-in");
   }
 
-  useEffect(() => {
+  const refresh = () => {
     getCurrentUser()
       .then((res) => {
         if (res?.message) { 
@@ -71,6 +74,11 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
       }).finally(() => {
         setIsLoading(false);
       })
+  }
+
+  useEffect(() => {
+    setIsLoading(true);
+    refresh();
   }, []);
 
   return (
@@ -84,6 +92,7 @@ const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading,
         propsValue,
         setPropsValue,
+        refresh,
         logout
       }}
     >

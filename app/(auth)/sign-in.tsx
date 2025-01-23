@@ -8,7 +8,8 @@ import {
   Alert,
 } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ThemedView } from "@/components/ThemedView";
+import { useTranslation } from "react-i18next";
 
 // import from project
 import { images } from "@/constants/Images";
@@ -18,98 +19,109 @@ import { Link, router } from "expo-router";
 import { AuthUserProps } from "@/constants/propUser";
 import { postLogin } from "@/lib/userdatabase";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import Loader from "@/components/Loader";
 import { useQrHistoryStore } from "@/context/QrHistoryStore";
+import MyAlert from "@/components/display/alert";
+import useAlert from "@/hooks/useAlert";
+import { MessageType } from "@/constants/types";
 
-const SignIn = () => { 
+const SignIn = () => {
   // Use the global context
-  const { setUser, setIsLoggedIn } = useGlobalContext();
+  const { setUser, setIsLoggedIn, isLoading } = useGlobalContext();
   const { fetchData } = useQrHistoryStore();
+  const [t] = useTranslation();
+  const { openAlert, alertModalState } = useAlert();
   // Define the state
   const [form, setForm] = useState<AuthUserProps>({
     username: "",
     password: "",
-    rememberMe: false,
+    rememberMe: true,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (value: AuthUserProps) => {
-    if (!form.username ||!form.password) {
-      Alert.alert("Please fill in all required fields");
-      return;
-    }
-    try {
-      setIsSubmitting(true);
-      const result = await postLogin(form);
-      if (!result.message) {
-        setUser(result);
-        fetchData(result);
-        setIsLoggedIn(true); // Update the global state
-        router.replace('/')
-      } else {
-        Alert.alert(result.message);
+    if (!form.username || !form.password) {
+      openAlert({
+        messageType: MessageType.warning,
+        headerText: t("Warning"),
+        messageText: t("Please fill in all required fields"),
+      });
+    } else {
+      try {
+        setIsSubmitting(true);
+        const result = await postLogin(form);
+        if (!result.message) {
+          setUser(result);
+          fetchData(result);
+          setIsLoggedIn(true); // Update the global state
+          router.replace("/");
+        } else {
+          openAlert({
+            messageType: MessageType.error,
+            headerText: "Failed",
+            messageText: result.message,
+          });
+        }
+      } catch (error: any) {
+        Alert.alert("Error", error.message);
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (error: any) {
-      Alert.alert('Error', error.message);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return (
     // Add your custom styles here or import them from a separate file
-    <SafeAreaView className="flex-1">
-      <ScrollView className="bg-white">
-        <View className="w-full justify-center min-w-[85vh]">
-          <Image source={images.VerismartLogo} className="w-[160px] h-[60px]" />
-          <View className="w-screen flex-row justify-between items-center px-4 my-5">
-            <Text className="text-2xl text-black text-semibold font-psemibold">
-              Sign-In
-            </Text>
-            <Link href={"/(auth)/sign-up"}>
-              <Text className="text-blue-600 underline">
-                Don't have an account?
-              </Text>
-            </Link>
-          </View>
+    <ThemedView className="flex-1">
+      <Loader isLoading={isLoading} />
+      <ScrollView>
+        <View className="w-full flex-row justify-center items-center mx-2 mt-4 mb-2 ">
+          <Image
+            source={images.appIcon}
+            resizeMode="cover"
+            className="w-[100px] h-[100px] "
+          />
+          <Text className="text-2xl text-black dark:text-white text-semibold font-psemibold ml-4">
+            QRPay Express
+          </Text>
         </View>
-        <View className="mx-4 md:mx-12 p-8 md:p-12 rounded-2xl shadow-md">
+        <View className="mx-4 md:mx-12 p-8 md:p-12 rounded-2xl shadow-md dark:bg-gray-400">
           <FormField
-            title="Username"
-            placeholder="Username"
+            placeholder={t("Username")}
             value={form.username}
             handleChangeText={(e) => setForm({ ...form, username: e })}
-            otherStyles="mt-3"
+            otherStyles="mt-7"
             autoComplete="username"
+            icon="user"
             required
           />
           <FormField
-            title="Password"
             type="password"
-            placeholder="Password"
+            placeholder={t("Password")}
             value={form.password}
             handleChangeText={(e) => setForm({ ...form, password: e })}
+            icon="lock"
             otherStyles="mt-7"
             required
           />
-          <View className="flex-row items-center">
-            <Switch
-              value={form.rememberMe}
-              onValueChange={() =>
-                setForm({ ...form, rememberMe: !form.rememberMe })
-              }
-            />
-            <Text>Keep me signed in</Text>
+          <View className="text-end items-end mt-2">
+            <Link href={"/(auth)/forget-password"}>
+              <Text className="text-blue-600 underline">
+                {t("Forget Password?")}
+              </Text>
+            </Link>
           </View>
           <CustomButton
-            title="Sign In"
+            title={t("Login")}
             onPress={() => handleSubmit(form)}
             containerStyles="mt-6 bg-blue-500 py-3 font-psemibold text-white"
             disabled={isSubmitting}
             icon="enter"
           />
         </View>
+        <MyAlert {...alertModalState} />
       </ScrollView>
-    </SafeAreaView>
+    </ThemedView>
   );
 };
 

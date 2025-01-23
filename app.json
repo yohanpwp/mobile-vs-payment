@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "mobile-payment",
+    "name": "QRPay Express",
     "slug": "mobile-payment",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/adaptive-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/verismart_background.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/scan_icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.veri.payment"
@@ -25,7 +25,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/scan_icon.png"
     },
     "plugins": [
       "expo-router",
@@ -34,6 +34,15 @@
     "experiments": {
       "typedRoutes": true
     },
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d3ca21a3-ebf0-43c8-9563-b2601ec577e4"
+      }
+    },
+    "owner": "yohanpwp"
   }
 }

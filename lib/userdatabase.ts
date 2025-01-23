@@ -1,86 +1,174 @@
 import { AuthUserProps, UserDataProps } from "@/constants/propUser";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-async function postLogin( user: AuthUserProps ) {
-    try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(user),
-        })
-        const json = await response.json();
-        if (json.token) {
-            await saveTokenAsyncStorage(json.token);
-            const user = await getCurrentUser();
-            return user;
-        } else {
-            return json; // ได้ message และ token มา
-        }
-    } catch (error) {
-        console.log(error);
+async function postLogin(user: AuthUserProps) {
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      }
+    );
+    const json = await response.json();
+    if (json.token) {
+      await saveTokenAsyncStorage(json.token);
+      const user = await getCurrentUser();
+      return user;
+    } else {
+      return json; // ได้ message และ token มา
     }
-    
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const saveTokenAsyncStorage = async (value: string) => {
-    try {
-        const token = await AsyncStorage.setItem('@token', value);
-        if (token!== null) {
-            return;
-        }
-    } catch (error) {
-        return error;
+  try {
+    const token = await AsyncStorage.setItem("@token", value);
+    if (token !== null) {
+      return;
     }
-}
+  } catch (error) {
+    return error;
+  }
+};
 
 const getTokenAsyncStorage = async () => {
-    try {
-        const token = await AsyncStorage.getItem('@token');
-        if (token!== null) {
-            return token;
-        } else {
-            return null;
-        }
-    } catch (error) {
-        console.log(error);
+  try {
+    const token = await AsyncStorage.getItem("@token");
+    if (token !== null) {
+      return token;
+    } else {
+      return null;
     }
-}
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const getCurrentUser = async () => {
-    try {
-        const token = await getTokenAsyncStorage();
-        if (token) {
-            const response = await fetch(`${process.env.EXPO_PUBLIC_LOCALHOST}/api/user`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            })
-            const json = await response.json();
-            return json;
-        } else {
-            return null;
+  try {
+    const token = await getTokenAsyncStorage();
+    if (token) {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-    } catch (error) {
-        console.log(error);
+      );
+      const json = await response.json();
+      return json;
+    } else {
+      return null;
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const createUser = async (body: UserDataProps) => {
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const userForgetPassword = async (body: any) => {
+  // ส่ง request และรับ response ที่ได้มา
+  try {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/forget-password`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+    const json = await response.json();
+    return json;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateUser = async (body: any) => {
+  try {
+    const token = await getTokenAsyncStorage();
+    if (token) {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/edit`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const json = await response.json();
+      return json;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const changeMypassword = async (body: any) => {
+  try {
+    const token = await getTokenAsyncStorage();
+    if (token) {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/change-password`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const json = await response.json();
+      return json;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-const createUser = async ( body: UserDataProps) => {
-    try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_LOCALHOST}/api/user/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-        })
-        const json = await response.json();
-        return json;
-    } catch (error) {
-        console.log(error);
-    }
-}
-export { postLogin, getTokenAsyncStorage, saveTokenAsyncStorage, getCurrentUser, createUser }
+export {
+  postLogin,
+  getTokenAsyncStorage,
+  saveTokenAsyncStorage,
+  getCurrentUser,
+  createUser,
+  userForgetPassword,
+  updateUser,
+  changeMypassword,
+};
